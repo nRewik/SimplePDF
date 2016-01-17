@@ -26,7 +26,7 @@ let pdfData = pdf.generatePDFdata()
 try? pdfData.writeToFile(path, options: .DataWritingAtomic)
 ``` 
 
-See the result [example.pdf](Assets/example.pdf), which is generated from [ExampleCode.swift](ExampleCode.Swift).
+See the result [example.pdf](Assets/example.pdf), which is generated from [ExampleCode.swift](ExampleCode.swift).
 
 ## Installation
 
