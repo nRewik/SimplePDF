@@ -2,6 +2,15 @@
     <img src="./Assets/simple_pdf_logo.png" alt="Simple PDF" />
 </p>
 
+<p align="center">
+   <img src="https://img.shields.io/badge/platform-iOS%209.0%2B-blue.svg?style=flat-square" alt="Platform: iOS 9.0+" />
+    <a href="https://developer.apple.com/swift">
+        <img src="https://img.shields.io/badge/language-swift2-f48041.svg?style=flat-square" alt="Language: Swift 2" />
+    </a>
+    <img src="https://img.shields.io/cocoapods/v/SimplePDF.svg?style=flat-square" alt="Cocoapods" />
+</p>
+
+
 SimplePDF is a wrapper of UIGraphics PDF context written in Swift. 
 
 You can: 
