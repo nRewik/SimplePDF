@@ -31,7 +31,7 @@ pdf.addImage( anImage )
 
 let array = [["Test1", "Test2", "Test3"],["Test4", "Test5", "Test6"],["Test7", "Test8", "Test9"]];
 
-pdf.addTable(3, columnCount: 3, rowHeight: 20.0, columnWidth: 30.0, tableLineWidth: 1.0, fontSize: 5.0, dataArray: array);
+pdf.addTable(3, columnCount: 3, rowHeight: 20.0, columnWidth: 30.0, tableLineWidth: 1.0, font: UIFont.systemFontOfSize(5.0), dataArray: array);
 
 let pdfData = pdf.generatePDFdata()
 

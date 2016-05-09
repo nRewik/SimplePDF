@@ -15,7 +15,7 @@ private enum SimplePDFCommand{
     case AddImage(UIImage)
     case AddLineSpace(CGFloat)
     case AddLineSeparator(height: CGFloat)
-    case AddTable(rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, fontSize: CGFloat, dataArray: Array<Array<String>>)
+    case AddTable(rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, font: UIFont, dataArray: Array<Array<String>>)
     
     case SetContentAlignment(ContentAlignment)
     case BeginNewPage
@@ -72,8 +72,8 @@ public class SimplePDF{
         commands += [ .AddLineSeparator(height: height) ]
     }
     
-    public func addTable(rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, fontSize: CGFloat, dataArray: Array<Array<String>>){
-        commands += [ .AddTable(rowCount: rowCount, columnCount: columnCount, rowHeight: rowHeight, columnWidth: columnWidth, tableLineWidth: tableLineWidth, fontSize: fontSize, dataArray: dataArray) ]
+    public func addTable(rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, font: UIFont, dataArray: Array<Array<String>>){
+        commands += [ .AddTable(rowCount: rowCount, columnCount: columnCount, rowHeight: rowHeight, columnWidth: columnWidth, tableLineWidth: tableLineWidth, font: font, dataArray: dataArray) ]
     }
     
     public func setContentAlignment(alignment: ContentAlignment){
@@ -249,7 +249,7 @@ public class SimplePDF{
         return drawRect
     }
     
-    private func drawTable(rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, fontSize: CGFloat, dataArray: Array<Array<String>>, currentYoffset: CGFloat) -> CGRect{
+    private func drawTable(rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, font: UIFont, dataArray: Array<Array<String>>, currentYoffset: CGFloat) -> CGRect{
         
         let height = (CGFloat(rowCount)*rowHeight)
         
@@ -282,7 +282,7 @@ public class SimplePDF{
                 let newOriginY = drawRect.origin.y + ((CGFloat(i)*rowHeight))
                 
                 let frame = CGRectMake(newOriginX, newOriginY, columnWidth, rowHeight)
-                drawTextInCell(frame, text: dataArray[i][j], fontSize: fontSize)
+                drawTextInCell(frame, text: dataArray[i][j], font: font)
             }
         }
         
@@ -303,11 +303,9 @@ public class SimplePDF{
         CGContextStrokePath(context)
     }
     
-    private func drawTextInCell(rect: CGRect, text: NSString, fontSize: CGFloat)
+    private func drawTextInCell(rect: CGRect, text: NSString, font: UIFont)
     {
         let fieldColor = UIColor.blackColor()
-        
-        let fieldFont = UIFont(name: "Helvetica Neue", size: fontSize)
         
         let paraStyle = NSMutableParagraphStyle()
         
@@ -317,7 +315,7 @@ public class SimplePDF{
             NSForegroundColorAttributeName: fieldColor,
             NSParagraphStyleAttributeName: paraStyle,
             NSObliquenessAttributeName: skew,
-            NSFontAttributeName: fieldFont!
+            NSFontAttributeName: font
         ]
         
         let size = text.sizeWithAttributes(attributes)
@@ -363,8 +361,8 @@ public class SimplePDF{
             case let .AddLineSpace(space):
                 currentYoffset += space
                 
-            case let .AddTable(rowCount, columnCount, rowHeight, columnWidth, tableLineWidth, fontSize, dataArray):
-                let tableFrame = drawTable(rowCount, columnCount: columnCount, rowHeight: rowHeight, columnWidth: columnWidth, tableLineWidth: tableLineWidth, fontSize: fontSize, dataArray: dataArray, currentYoffset: currentYoffset)
+            case let .AddTable(rowCount, columnCount, rowHeight, columnWidth, tableLineWidth, font, dataArray):
+                let tableFrame = drawTable(rowCount, columnCount: columnCount, rowHeight: rowHeight, columnWidth: columnWidth, tableLineWidth: tableLineWidth, font: font, dataArray: dataArray, currentYoffset: currentYoffset)
                 currentYoffset = tableFrame.origin.y + tableFrame.height
                 
             case let .SetContentAlignment(newAlignment):
