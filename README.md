@@ -11,9 +11,9 @@
 </p>
 
 
-SimplePDF is a wrapper of UIGraphics PDF context written in Swift. 
+SimplePDF is a wrapper of UIGraphics PDF context written in Swift.
 
-You can: 
+You can:
 - [x] add texts, images, spaces and lines
 - [x] set up page layout, adjust content alignment
 - [x] generate PDF data/file.
@@ -29,11 +29,15 @@ let pdf = SimplePDF(pageSize: A4paperSize)
 pdf.addText("Hello World!")
 pdf.addImage( anImage )
 
-let pdfData = pdf.generatePDFdata() 
+let array = [["Test1", "Test2", "Test3"],["Test4", "Test5", "Test6"],["Test7", "Test8", "Test9"]];
+
+pdf.addTable(3, columnCount: 3, rowHeight: 20.0, columnWidth: 30.0, tableLineWidth: 1.0, font: UIFont.systemFontOfSize(5.0), dataArray: array);
+
+let pdfData = pdf.generatePDFdata()
 
 // save as a local file
 try? pdfData.writeToFile(path, options: .DataWritingAtomic)
-``` 
+```
 
 See the result [example.pdf](Assets/example.pdf), which is generated from [ExampleCode.swift](ExampleCode.swift).
 
