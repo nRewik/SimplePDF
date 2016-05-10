@@ -14,7 +14,7 @@
 SimplePDF is a wrapper of UIGraphics PDF context written in Swift.
 
 You can:
-- [x] add texts, images, spaces and lines
+- [x] add texts, images, spaces and lines, table
 - [x] set up page layout, adjust content alignment
 - [x] generate PDF data/file.
 
@@ -29,9 +29,8 @@ let pdf = SimplePDF(pageSize: A4paperSize)
 pdf.addText("Hello World!")
 pdf.addImage( anImage )
 
-let array = [["Test1", "Test2", "Test3"],["Test4", "Test5", "Test6"],["Test7", "Test8", "Test9"]];
-
-pdf.addTable(3, columnCount: 3, rowHeight: 20.0, columnWidth: 30.0, tableLineWidth: 1.0, font: UIFont.systemFontOfSize(5.0), dataArray: array);
+let dataArray = [["Test1", "Test2"],["Test3", "Test4"]]
+pdf.addTable(rowCount: 2, columnCount: 2, rowHeight: 20.0, columnWidth: 30.0, tableLineWidth: 1.0, font: UIFont.systemFontOfSize(5.0), dataArray: dataArray)
 
 let pdfData = pdf.generatePDFdata()
 
@@ -81,7 +80,7 @@ pdf.addLineSpace(20)
 pdf.beginNewPage() // Begin a new page
 ```
 
-These following commands will affect everything you write after you call. 
+These following commands will affect everything you write after you call.
 
 ```swift
 pdf.setContentAlignment(.Center) // .Left, .Center, .Right

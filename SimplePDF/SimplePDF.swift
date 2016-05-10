@@ -249,7 +249,7 @@ public class SimplePDF{
         return drawRect
     }
     
-    private func drawTable(rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, font: UIFont, dataArray: Array<Array<String>>, currentYoffset: CGFloat) -> CGRect{
+    private func drawTable(rowCount rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, font: UIFont, dataArray: Array<Array<String>>, currentYoffset: CGFloat) -> CGRect{
         
         let height = (CGFloat(rowCount)*rowHeight)
         
@@ -362,7 +362,7 @@ public class SimplePDF{
                 currentYoffset += space
                 
             case let .AddTable(rowCount, columnCount, rowHeight, columnWidth, tableLineWidth, font, dataArray):
-                let tableFrame = drawTable(rowCount, columnCount: columnCount, rowHeight: rowHeight, columnWidth: columnWidth, tableLineWidth: tableLineWidth, font: font, dataArray: dataArray, currentYoffset: currentYoffset)
+                let tableFrame = drawTable(rowCount: rowCount, columnCount: columnCount, rowHeight: rowHeight, columnWidth: columnWidth, tableLineWidth: tableLineWidth, font: font, dataArray: dataArray, currentYoffset: currentYoffset)
                 currentYoffset = tableFrame.origin.y + tableFrame.height
                 
             case let .SetContentAlignment(newAlignment):
