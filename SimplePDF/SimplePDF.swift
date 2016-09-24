@@ -8,35 +8,35 @@
 
 import UIKit
 
-private enum SimplePDFCommand{
+private enum SimplePDFCommand {
     
-    case AddText(String)
-    case AddAttributedText( NSAttributedString )
-    case AddImage(UIImage)
-    case AddLineSpace(CGFloat)
-    case AddLineSeparator(height: CGFloat)
-    case AddTable(rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, font: UIFont, dataArray: Array<Array<String>>)
+    case addText(String)
+    case addAttributedText( NSAttributedString )
+    case addImage(UIImage)
+    case addLineSpace(CGFloat)
+    case addLineSeparator(height: CGFloat)
+    case addTable(rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, font: UIFont, dataArray: Array<Array<String>>)
     
-    case SetContentAlignment(ContentAlignment)
-    case BeginNewPage
+    case setContentAlignment(ContentAlignment)
+    case beginNewPage
     
-    case SetFont(UIFont)
+    case setFont(UIFont)
 }
 
-public enum ContentAlignment{
-    case Left, Center, Right
+public enum ContentAlignment {
+    case left, center, right
 }
 
-public class SimplePDF{
+open class SimplePDF {
     
     /* States */
-    private var commands: [SimplePDFCommand] = []
+    fileprivate var commands: [SimplePDFCommand] = []
     
     /* Initialization */
-    private let pageBounds: CGRect
-    private let pageMargin: CGFloat
+    fileprivate let pageBounds: CGRect
+    fileprivate let pageMargin: CGFloat
     
-    public init(pageSize: CGSize, pageMargin: CGFloat = 20.0){
+    public init(pageSize: CGSize, pageMargin: CGFloat = 20.0) {
         
         pageBounds = CGRect(origin: CGPoint.zero, size: pageSize)
         self.pageMargin = pageMargin
@@ -49,58 +49,58 @@ public class SimplePDF{
     /// SimplePDF will begin a new page and draw remaining text.
     ///
     /// This process will be repeated untill there's no text left to draw.
-    public func addText(text: String){
-        commands += [ .AddText(text) ]
+    open func addText(_ text: String) {
+        commands += [ .addText(text) ]
     }
     
     
     /// - Important: Font and Content alignment settings will be ignored.
     /// You have to manually add those attributes to attributed text yourself.
-    public func addAttributedText( attributedText: NSAttributedString ){
-        commands += [ .AddAttributedText(attributedText) ]
+    open func addAttributedText( _ attributedText: NSAttributedString) {
+        commands += [ .addAttributedText(attributedText) ]
     }
     
-    public func addImage(image: UIImage){
-        commands += [ .AddImage(image) ]
+    open func addImage(_ image: UIImage) {
+        commands += [ .addImage(image) ]
     }
     
-    public func addLineSpace(space: CGFloat){
-        commands += [ .AddLineSpace(space) ]
+    open func addLineSpace(_ space: CGFloat) {
+        commands += [ .addLineSpace(space) ]
     }
     
-    public func addLineSeparator(height height: CGFloat = 1.0){
-        commands += [ .AddLineSeparator(height: height) ]
+    open func addLineSeparator(height: CGFloat = 1.0) {
+        commands += [ .addLineSeparator(height: height) ]
     }
     
-    public func addTable(rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, font: UIFont, dataArray: Array<Array<String>>){
-        commands += [ .AddTable(rowCount: rowCount, columnCount: columnCount, rowHeight: rowHeight, columnWidth: columnWidth, tableLineWidth: tableLineWidth, font: font, dataArray: dataArray) ]
+    open func addTable(_ rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, font: UIFont, dataArray: Array<Array<String>>) {
+        commands += [ .addTable(rowCount: rowCount, columnCount: columnCount, rowHeight: rowHeight, columnWidth: columnWidth, tableLineWidth: tableLineWidth, font: font, dataArray: dataArray) ]
     }
     
-    public func setContentAlignment(alignment: ContentAlignment){
-        commands += [ .SetContentAlignment(alignment) ]
+    open func setContentAlignment(_ alignment: ContentAlignment) {
+        commands += [ .setContentAlignment(alignment) ]
     }
     
-    public func beginNewPage(){
-        commands += [ .BeginNewPage ]
+    open func beginNewPage() {
+        commands += [ .beginNewPage ]
     }
     
-    public func setFont( font: UIFont ){
-        commands += [ .SetFont(font) ]
+    open func setFont( _ font: UIFont ) {
+        commands += [ .setFont(font) ]
     }
     
     /// - returns: drawing text rect
-    private func drawText(text: String, font: UIFont, alignment: ContentAlignment, currentYoffset: CGFloat) -> CGRect{
+    fileprivate func drawText(_ text: String, font: UIFont, alignment: ContentAlignment, currentYoffset: CGFloat) -> CGRect {
         
         // Draw attributed text from font and paragraph style attribute.
         
         let paragraphStyle = NSMutableParagraphStyle()
-        switch alignment{
-        case .Left:
-            paragraphStyle.alignment = .Left
-        case .Center:
-            paragraphStyle.alignment = .Center
-        case .Right:
-            paragraphStyle.alignment = .Right
+        switch alignment {
+        case .left:
+            paragraphStyle.alignment = .left
+        case .center:
+            paragraphStyle.alignment = .center
+        case .right:
+            paragraphStyle.alignment = .right
         }
         
         let attributes: [String:NSObject] = [
@@ -112,28 +112,28 @@ public class SimplePDF{
         return drawAttributedText(attributedText, currentYoffset: currentYoffset)
     }
     
-    private func drawAttributedText( attributedText: NSAttributedString, currentYoffset: CGFloat) -> CGRect{
+    fileprivate func drawAttributedText( _ attributedText: NSAttributedString, currentYoffset: CGFloat) -> CGRect {
         
         var drawingYoffset = currentYoffset
         
-        let currentText = CFAttributedStringCreateCopy(nil, attributedText as CFAttributedStringRef)
-        let framesetter = CTFramesetterCreateWithAttributedString(currentText)
+        let currentText = CFAttributedStringCreateCopy(nil, attributedText as CFAttributedString)
+        let framesetter = CTFramesetterCreateWithAttributedString(currentText!)
         var currentRange = CFRange(location: 0, length: 0)
         var done = false
         
         var lastDrawnFrame: CGRect!
         
-        repeat{
+        repeat {
             
             // Get the graphics context.
             let currentContext = UIGraphicsGetCurrentContext()!
             
             // Push state
-            CGContextSaveGState(currentContext)
+            currentContext.saveGState()
             
             // Put the text matrix into a known state. This ensures
             // that no old scaling factors are left in place.
-            CGContextSetTextMatrix(currentContext, CGAffineTransformIdentity)
+            currentContext.textMatrix = CGAffineTransform.identity
             
             // print("y offset: \t\(drawingYOffset)")
             
@@ -145,7 +145,7 @@ public class SimplePDF{
             
             // Create a path object to enclose the text.
             let frameRect = CGRect(x: pageMargin, y: drawingYoffset, width: textMaxWidth, height: textMaxHeight)
-            let framePath = UIBezierPath(rect: frameRect).CGPath
+            let framePath = UIBezierPath(rect: frameRect).cgPath
             
             // Get the frame that will do the rendering.
             // The currentRange variable specifies only the starting point. The framesetter
@@ -154,14 +154,14 @@ public class SimplePDF{
             
             // Core Text draws from the bottom-left corner up, so flip
             // the current transform prior to drawing.
-            CGContextTranslateCTM(currentContext, 0, pageBounds.height + drawingYoffset - pageMargin)
-            CGContextScaleCTM(currentContext, 1.0, -1.0)
+            currentContext.translateBy(x: 0, y: pageBounds.height + drawingYoffset - pageMargin)
+            currentContext.scaleBy(x: 1.0, y: -1.0)
             
             // Draw the frame.
             CTFrameDraw(frameRef, currentContext)
             
             // Pop state
-            CGContextRestoreGState(currentContext)
+            currentContext.restoreGState()
             
             // Update the current range based on what was drawn.
             let visibleRange = CTFrameGetVisibleStringRange(frameRef)
@@ -176,10 +176,10 @@ public class SimplePDF{
             
             // If we're at the end of the text, exit the loop.
             // print("\(currentRange.location) \(CFAttributedStringGetLength(currentText))")
-            if currentRange.location == CFAttributedStringGetLength(currentText){
+            if currentRange.location == CFAttributedStringGetLength(currentText) {
                 done = true
                 // print("exit")
-            }else{
+            } else {
                 // begin a new page to draw text that is remaining.
                 UIGraphicsBeginPDFPageWithInfo(pageBounds, nil)
                 drawingYoffset = pageMargin
@@ -187,13 +187,13 @@ public class SimplePDF{
             }
             
             
-        }while(!done)
+        } while(!done)
         
         return lastDrawnFrame
     }
     
     /// - returns: drawing image rect
-    private func drawImage(image: UIImage, alignment: ContentAlignment, currentYoffset: CGFloat) -> CGRect{
+    fileprivate func drawImage(_ image: UIImage, alignment: ContentAlignment, currentYoffset: CGFloat) -> CGRect {
         
         /* calculate the aspect size of image */
         
@@ -210,12 +210,12 @@ public class SimplePDF{
         
         /* calculate x offset for rendering */
         let renderingXoffset: CGFloat
-        switch alignment{
-        case .Left:
+        switch alignment {
+        case .left:
             renderingXoffset = pageMargin
-        case .Center:
+        case .center:
             renderingXoffset = ( pageBounds.width - aspectWidth ) / 2.0
-        case .Right:
+        case .right:
             let right = pageBounds.width - pageMargin
             renderingXoffset =  right - aspectWidth
         }
@@ -223,89 +223,87 @@ public class SimplePDF{
         let renderingRect = CGRect(x: renderingXoffset, y: currentYoffset, width: aspectWidth, height: aspectHeight)
         
         // render image to current pdf context
-        image.drawInRect(renderingRect)
+        image.draw(in: renderingRect)
         
         return renderingRect
     }
     
-    private func drawLineSeparator(height height: CGFloat, currentYoffset: CGFloat) -> CGRect{
+    fileprivate func drawLineSeparator(height: CGFloat, currentYoffset: CGFloat) -> CGRect {
         
         let drawRect = CGRect(x: pageMargin, y: currentYoffset, width: pageBounds.width - 2*pageMargin, height: height)
-        let path = UIBezierPath(rect: drawRect).CGPath
+        let path = UIBezierPath(rect: drawRect).cgPath
         
         // Get the graphics context.
         let currentContext = UIGraphicsGetCurrentContext()!
         
         // Set color
-        UIColor.blackColor().setStroke()
-        UIColor.blackColor().setFill()
+        UIColor.black.setStroke()
+        UIColor.black.setFill()
         
         // Draw path
-        CGContextAddPath(currentContext, path)
-        CGContextDrawPath(currentContext, .FillStroke)
+        currentContext.addPath(path)
+        currentContext.drawPath(using: .fillStroke)
         
         // print(drawRect)
         
         return drawRect
     }
     
-    private func drawTable(rowCount rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, font: UIFont, dataArray: Array<Array<String>>, currentYoffset: CGFloat) -> CGRect{
+    fileprivate func drawTable(rowCount: Int, columnCount: Int, rowHeight: CGFloat, columnWidth: CGFloat, tableLineWidth: CGFloat, font: UIFont, dataArray: Array<Array<String>>, currentYoffset: CGFloat) -> CGRect {
         
         let height = (CGFloat(rowCount)*rowHeight)
         
         let drawRect = CGRect(x: pageMargin, y: currentYoffset, width: pageBounds.width - 2*pageMargin, height: height)
         
-        UIColor.blackColor().setStroke()
-        UIColor.blackColor().setFill()
+        UIColor.black.setStroke()
+        UIColor.black.setFill()
         
-        for i in 0...rowCount{
+        for i in 0...rowCount {
             let newOrigin = drawRect.origin.y + rowHeight*CGFloat(i)
             
-            let from = CGPointMake(drawRect.origin.x, newOrigin)
-            let to = CGPointMake(drawRect.origin.x + CGFloat(columnCount)*columnWidth, newOrigin)
+            let from = CGPoint(x: drawRect.origin.x, y: newOrigin)
+            let to = CGPoint(x: drawRect.origin.x + CGFloat(columnCount)*columnWidth, y: newOrigin)
             
             drawLineFromPoint(from, to: to, lineWidth: tableLineWidth)
         }
         
-        for i in 0...columnCount{
+        for i in 0...columnCount {
             let newOrigin = drawRect.origin.x + columnWidth*CGFloat(i)
             
-            let from = CGPointMake(newOrigin, drawRect.origin.y)
-            let to = CGPointMake(newOrigin, drawRect.origin.y + CGFloat(rowCount)*rowHeight)
+            let from = CGPoint(x: newOrigin, y: drawRect.origin.y)
+            let to = CGPoint(x: newOrigin, y: drawRect.origin.y + CGFloat(rowCount)*rowHeight)
             
             drawLineFromPoint(from, to: to, lineWidth: tableLineWidth)
         }
         
-        for i in 0..<rowCount{
-            for j in 0...columnCount-1{
+        for i in 0..<rowCount {
+            for j in 0...columnCount-1 {
                 let newOriginX = drawRect.origin.x + (CGFloat(j)*columnWidth)
                 let newOriginY = drawRect.origin.y + ((CGFloat(i)*rowHeight))
                 
-                let frame = CGRectMake(newOriginX, newOriginY, columnWidth, rowHeight)
-                drawTextInCell(frame, text: dataArray[i][j], font: font)
+                let frame = CGRect(x: newOriginX, y: newOriginY, width: columnWidth, height: rowHeight)
+                drawTextInCell(frame, text: dataArray[i][j] as NSString, font: font)
             }
         }
         
         return drawRect
     }
     
-    private func drawLineFromPoint(from: CGPoint, to: CGPoint, lineWidth: CGFloat)
-    {
+    fileprivate func drawLineFromPoint(_ from: CGPoint, to: CGPoint, lineWidth: CGFloat) {
         let context = UIGraphicsGetCurrentContext()!
-        CGContextSetLineWidth(context, lineWidth)
+        context.setLineWidth(lineWidth)
         let colorspace = CGColorSpaceCreateDeviceRGB()
-        let color = CGColorCreate(colorspace, [0.2, 0.2, 0.2, 1.0])
+        let color = CGColor(colorSpace: colorspace, components: [0.2, 0.2, 0.2, 1.0])
         
-        CGContextSetStrokeColorWithColor(context, color)
-        CGContextMoveToPoint(context, from.x, from.y)
-        CGContextAddLineToPoint(context, to.x, to.y)
+        context.setStrokeColor(color!)
+        context.move(to: CGPoint(x: from.x, y: from.y))
+        context.addLine(to: CGPoint(x: to.x, y: to.y))
         
-        CGContextStrokePath(context)
+        context.strokePath()
     }
     
-    private func drawTextInCell(rect: CGRect, text: NSString, font: UIFont)
-    {
-        let fieldColor = UIColor.blackColor()
+    fileprivate func drawTextInCell(_ rect: CGRect, text: NSString, font: UIFont) {
+        let fieldColor = UIColor.black
         
         let paraStyle = NSMutableParagraphStyle()
         
@@ -314,21 +312,21 @@ public class SimplePDF{
         let attributes: [String: AnyObject] = [
             NSForegroundColorAttributeName: fieldColor,
             NSParagraphStyleAttributeName: paraStyle,
-            NSObliquenessAttributeName: skew,
+            NSObliquenessAttributeName: skew as AnyObject,
             NSFontAttributeName: font
         ]
         
-        let size = text.sizeWithAttributes(attributes)
+        let size = text.size(attributes: attributes)
         
         let x = (rect.size.width - size.width)/2
         let y = (rect.size.height - size.height)/2
         
         
-        text.drawAtPoint(CGPointMake(rect.origin.x + x, rect.origin.y + y), withAttributes: attributes)
+        text.draw(at: CGPoint(x: rect.origin.x + x, y: rect.origin.y + y), withAttributes: attributes)
     }
     
     
-    public func generatePDFdata() -> NSData{
+    open func generatePDFdata() -> Data {
         
         let pdfData = NSMutableData()
         
@@ -336,43 +334,43 @@ public class SimplePDF{
         UIGraphicsBeginPDFPageWithInfo(pageBounds, nil)
         
         var currentYoffset = pageMargin
-        var alignment = ContentAlignment.Left
-        var font = UIFont.systemFontOfSize( UIFont.systemFontSize() )
+        var alignment = ContentAlignment.left
+        var font = UIFont.systemFont( ofSize: UIFont.systemFontSize )
         
-        for command in commands{
+        for command in commands {
             
             switch command{
-            case let .AddText(text):
+            case let .addText(text):
                 let textFrame = drawText(text, font: font, alignment: alignment, currentYoffset: currentYoffset)
                 currentYoffset = textFrame.origin.y + textFrame.height
                 
-            case let .AddAttributedText(attributedText):
+            case let .addAttributedText(attributedText):
                 let textFrame = drawAttributedText(attributedText, currentYoffset: currentYoffset)
                 currentYoffset = textFrame.origin.y + textFrame.height
                 
-            case let .AddImage(image):
+            case let .addImage(image):
                 let imageFrame = drawImage(image, alignment: alignment, currentYoffset: currentYoffset)
                 currentYoffset = imageFrame.origin.y + imageFrame.height
                 
-            case let .AddLineSeparator(height: height):
+            case let .addLineSeparator(height: height):
                 let drawRect = drawLineSeparator(height: height, currentYoffset: currentYoffset)
                 currentYoffset = drawRect.origin.y + drawRect.height
                 
-            case let .AddLineSpace(space):
+            case let .addLineSpace(space):
                 currentYoffset += space
                 
-            case let .AddTable(rowCount, columnCount, rowHeight, columnWidth, tableLineWidth, font, dataArray):
+            case let .addTable(rowCount, columnCount, rowHeight, columnWidth, tableLineWidth, font, dataArray):
                 let tableFrame = drawTable(rowCount: rowCount, columnCount: columnCount, rowHeight: rowHeight, columnWidth: columnWidth, tableLineWidth: tableLineWidth, font: font, dataArray: dataArray, currentYoffset: currentYoffset)
                 currentYoffset = tableFrame.origin.y + tableFrame.height
                 
-            case let .SetContentAlignment(newAlignment):
+            case let .setContentAlignment(newAlignment):
                 alignment = newAlignment
                 
-            case .BeginNewPage:
+            case .beginNewPage:
                 UIGraphicsBeginPDFPageWithInfo(pageBounds, nil)
                 currentYoffset = pageMargin
                 
-            case let .SetFont(newFont):
+            case let .setFont(newFont):
                 font = newFont
             }
             
@@ -380,7 +378,7 @@ public class SimplePDF{
         
         UIGraphicsEndPDFContext()
         
-        return pdfData
+        return pdfData as Data
     }
     
 }

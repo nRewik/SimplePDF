@@ -29,22 +29,22 @@ class SimplePDFTests: XCTestCase {
         let pdf = SimplePDF(pageSize: a4PaperSize)
         
         // load test image
-        let bundle = NSBundle(forClass: self.dynamicType)
-        let path = bundle.pathForResource("simple_pdf_logo", ofType: "png")!
+        let bundle = Bundle(for: type(of: self))
+        let path = bundle.path(forResource: "simple_pdf_logo", ofType: "png")!
         let image = UIImage(contentsOfFile: path)!
         
-        pdf.setContentAlignment(.Center)
+        pdf.setContentAlignment(.center)
         pdf.addImage(image)
         
         pdf.addLineSpace(30)
 
-        pdf.setContentAlignment(.Left)
+        pdf.setContentAlignment(.left)
         pdf.addText("Normal text follows by line separator")
         pdf.addLineSeparator()
         
         pdf.addLineSpace(20.0)
         
-        pdf.setContentAlignment(.Right)
+        pdf.setContentAlignment(.right)
         pdf.addText("Text after set content alignment to .Right")
         pdf.addLineSpace(20.0)
         
@@ -52,7 +52,7 @@ class SimplePDFTests: XCTestCase {
         
         pdf.addLineSpace(30)
         
-        pdf.setContentAlignment(.Center)
+        pdf.setContentAlignment(.center)
 
         pdf.addText("Center Text")
         pdf.addLineSpace(20.0)
@@ -61,7 +61,7 @@ class SimplePDFTests: XCTestCase {
         
         pdf.addLineSpace(30.0)
         
-        pdf.setContentAlignment(.Left)
+        pdf.setContentAlignment(.left)
         let textString = "This is an example of long text. If the text doesn't fit in the current page. Simple pdf will draw a part of text, and automatically begin a new page to draw the remaining text. This process will be repeated until there's no text left to draw. "
         pdf.addText(textString)
         
@@ -69,14 +69,14 @@ class SimplePDFTests: XCTestCase {
         pdf.beginNewPage()
         pdf.addText("Begin new page")
         
-        if let documentDirectories = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first {
+        if let documentDirectories = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
             
             let fileName = "example.pdf"
             let documentsFileName = documentDirectories + "/" + fileName
             
             let pdfData = pdf.generatePDFdata()
             do{
-                try pdfData.writeToFile(documentsFileName, options: .DataWritingAtomic)
+                try pdfData.write(to: URL(fileURLWithPath: documentsFileName), options: .atomic)
                 print("\nThe generated pdf can be found at:")
                 print("\n\t\(documentsFileName)\n")
             }catch{
@@ -84,13 +84,6 @@ class SimplePDFTests: XCTestCase {
             }
         }
         
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock {
-            // Put the code you want to measure the time of here.
-        }
     }
     
 }
