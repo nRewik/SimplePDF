@@ -3,9 +3,9 @@
 </p>
 
 <p align="center">
-   <img src="https://img.shields.io/badge/platform-iOS%208.0%2B-blue.svg?style=flat-square" alt="Platform: iOS 9.0+" />
+   <img src="https://img.shields.io/badge/platform-iOS%208.0%2B-blue.svg?style=flat-square" alt="Platform: iOS 8.0+" />
     <a href="https://developer.apple.com/swift">
-        <img src="https://img.shields.io/badge/language-swift2-f48041.svg?style=flat-square" alt="Language: Swift 2" />
+        <img src="https://img.shields.io/badge/language-swift3-f48041.svg?style=flat-square" alt="Language: Swift 3" />
     </a>
     <img src="https://img.shields.io/cocoapods/v/SimplePDF.svg?style=flat-square" alt="Cocoapods" />
 </p>
