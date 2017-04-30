@@ -97,15 +97,20 @@ pdf.addVerticalSpace(70)
 Define the layout of tables with definitions
 ```swift
 let tableDef = TableDefinition(alignments: [.left, .left],
-                                           columnWidths: [100, 300],
-                                           fonts: [UIFont.systemFont(ofSize: 20),
-                                                   UIFont.systemFont(ofSize: 16)],
-                                           textColors: [UIColor.black,
-                                                        UIColor.blue])
+                               columnWidths: [100, 300],
+                               fonts: [UIFont.systemFont(ofSize: 20),
+                                       UIFont.systemFont(ofSize: 16)],
+                               textColors: [UIColor.black,
+                                            UIColor.blue])
          
 let data = [] // my data
          
-pdf.addTable(data.count, columnCount: 2, rowHeight: 25, tableLineWidth: 0, tableDefinition: tableDef, dataArray: data)
+pdf.addTable(data.count, 
+             columnCount: 2, 
+             rowHeight: 25, 
+             tableLineWidth: 0, // this is taken from the definition
+             tableDefinition: tableDef, 
+             dataArray: data)
 ```
 
 ### Utilities
