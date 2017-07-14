@@ -103,9 +103,9 @@ open class SimplePDF {
             paragraphStyle.alignment = .right
         }
         
-        let attributes: [String:Any] = [
-            NSFontAttributeName: font,
-            NSParagraphStyleAttributeName: paragraphStyle
+        let attributes: [NSAttributedStringKey:Any] = [
+            NSAttributedStringKey.font: font,
+            NSAttributedStringKey.paragraphStyle: paragraphStyle
         ]
         let attributedText = NSAttributedString(string: text, attributes: attributes)
         
@@ -309,14 +309,14 @@ open class SimplePDF {
         
         let skew = 0.0
         
-        let attributes: [String: Any] = [
-            NSForegroundColorAttributeName: fieldColor,
-            NSParagraphStyleAttributeName: paraStyle,
-            NSObliquenessAttributeName: skew,
-            NSFontAttributeName: font
+        let attributes: [NSAttributedStringKey: Any] = [
+            NSAttributedStringKey.foregroundColor: fieldColor,
+            NSAttributedStringKey.paragraphStyle: paraStyle,
+            NSAttributedStringKey.obliqueness: skew,
+            NSAttributedStringKey.font: font
         ]
         
-        let size = text.size(attributes: attributes)
+        let size = text.size(withAttributes: attributes)
         
         let x = (rect.size.width - size.width)/2
         let y = (rect.size.height - size.height)/2
