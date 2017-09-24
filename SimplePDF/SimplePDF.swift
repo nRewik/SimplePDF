@@ -477,7 +477,6 @@ open class SimplePDF {
         
         var currentOffset = CGPoint(x: pageMarginLeft, y: pageMarginTop)
         var alignment = ContentAlignment.left
-        var font = UIFont.systemFont( ofSize: UIFont.systemFontSize )
         var arrangementDirection = ArrangementDirection.vertical
         var lastYOffset = currentOffset.y
         
