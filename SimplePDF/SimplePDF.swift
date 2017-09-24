@@ -21,8 +21,6 @@ private enum SimplePDFCommand {
     case setContentAlignment(ContentAlignment)
     case beginNewPage
     
-    case setFont(UIFont)
-    
     case beginHorizontalArrangement
     case endHorizontalArrangement
     
@@ -129,10 +127,6 @@ open class SimplePDF {
     
     open func beginNewPage() {
         commands += [ .beginNewPage ]
-    }
-    
-    open func setFont( _ font: UIFont ) {
-        commands += [ .setFont(font) ]
     }
     
     open func beginHorizontalArrangement() {
@@ -548,9 +542,6 @@ open class SimplePDF {
                 UIGraphicsBeginPDFPageWithInfo(pageBounds, nil)
                 currentOffset = CGPoint(x: pageMarginLeft, y: pageMarginTop)
                 lastYOffset = currentOffset.y
-                
-            case let .setFont(newFont):
-                font = newFont
                 
             case .beginHorizontalArrangement:
                 arrangementDirection = .horizontal

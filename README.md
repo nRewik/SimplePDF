@@ -27,6 +27,9 @@ let A4paperSize = CGSize(width: 595, height: 842)
 let pdf = SimplePDF(pageSize: A4paperSize)
 
 pdf.addText("Hello World!")
+// or
+// pdf.addText("Hello World!", font: myFont, textColor: myTextColor)
+
 pdf.addImage( anImage )
 
 let dataArray = [["Test1", "Test2"],["Test3", "Test4"]]
@@ -123,8 +126,6 @@ These following commands will affect everything you write after you call.
 
 ```swift
 pdf.setContentAlignment(.Center) // .Left, .Center, .Right
-
-pdf.setFont( UIFont ) // only affect pdf.addText(...) command
 ```
 
 ### Generate PDF data
