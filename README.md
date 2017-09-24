@@ -62,6 +62,8 @@ import SimplePDF
 ```swift
 let A4paperSize = CGSize(width: 595, height: 842)
 let pdf = SimplePDF(pageSize: A4paperSize, pageMargin: 20.0)
+// or define all margins extra
+let pdf = SimplePDF(pageSize: A4paperSize, pageMarginLeft: 35, pageMarginTop: 50, pageMarginBottom: 40, pageMarginRight: 35)
 ```
 
 ### Write Something
@@ -72,6 +74,43 @@ pdf.addImage( UIImage )
 pdf.addAttributedText( NSAttributedString )
 pdf.addLineSeparator(height: 30) // or pdf.addLineSeparator() default height is 1.0
 pdf.addLineSpace(20)
+```
+
+### Layout
+You can layout horizontally and vertically
+```swift
+// Start a horizonal arrangement
+pdf.beginHorizontalArrangement()
+// Add space from the left
+pdf.addHorizontalSpace(60)            
+
+// now add your text, table, image, ...
+
+// finishe the horizontal arrangement so you can continue vertically
+pdf.endHorizontalArrangement()
+
+// adds a vertical space
+pdf.addVerticalSpace(70)
+```
+
+### Table Definitions
+Define the layout of tables with definitions
+```swift
+let tableDef = TableDefinition(alignments: [.left, .left],
+                               columnWidths: [100, 300],
+                               fonts: [UIFont.systemFont(ofSize: 20),
+                                       UIFont.systemFont(ofSize: 16)],
+                               textColors: [UIColor.black,
+                                            UIColor.blue])
+         
+let data = [] // my data
+         
+pdf.addTable(data.count, 
+             columnCount: 2, 
+             rowHeight: 25, 
+             tableLineWidth: 0, // this is taken from the definition
+             tableDefinition: tableDef, 
+             dataArray: data)
 ```
 
 ### Utilities
