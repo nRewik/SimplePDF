@@ -158,10 +158,10 @@ open class SimplePDF {
             paragraphStyle.alignment = .right
         }
         
-        let attributes: [String:NSObject] = [
-            NSFontAttributeName: font,
-            NSForegroundColorAttributeName: textColor,
-            NSParagraphStyleAttributeName: paragraphStyle
+        let attributes: [NSAttributedStringKey: Any] = [
+            .font: font,
+            .foregroundColor: textColor,
+            .paragraphStyle: paragraphStyle
         ]
         let attributedText = NSAttributedString(string: text, attributes: attributes)
         
@@ -439,14 +439,14 @@ open class SimplePDF {
         
         let skew = 0.0
         
-        let attributes: [String: AnyObject] = [
-            NSForegroundColorAttributeName: textColor,
-            NSParagraphStyleAttributeName: paraStyle,
-            NSObliquenessAttributeName: skew as AnyObject,
-            NSFontAttributeName: font
+        let attributes: [NSAttributedStringKey: Any] = [
+            .foregroundColor: textColor,
+            .paragraphStyle: paraStyle,
+            .obliqueness: skew,
+            .font: font
         ]
         
-        let size = text.size(attributes: attributes)
+        let size = text.size(withAttributes: attributes)
         
         let x:CGFloat = { () -> CGFloat in
             switch alignment {

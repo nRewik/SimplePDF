@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name = "SimplePDF"
-  spec.version = "2.0.0"
+  spec.version = "3.0.0"
   spec.summary = "A library for creating simple pdf files."
   spec.homepage = "https://github.com/nrewik/SimplePDF"
   spec.license = { type: 'MIT', file: 'LICENSE' }
