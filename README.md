@@ -5,7 +5,7 @@
 <p align="center">
    <img src="https://img.shields.io/badge/platform-iOS%208.0%2B-blue.svg?style=flat-square" alt="Platform: iOS 8.0+" />
     <a href="https://developer.apple.com/swift">
-        <img src="https://img.shields.io/badge/language-swift3-f48041.svg?style=flat-square" alt="Language: Swift 3" />
+        <img src="https://img.shields.io/badge/language-Swift%204-f48041.svg?style=flat-square" alt="Language: Swift 4" />
     </a>
     <img src="https://img.shields.io/cocoapods/v/SimplePDF.svg?style=flat-square" alt="Cocoapods" />
 </p>
