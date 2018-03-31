@@ -407,6 +407,16 @@ open class SimplePDF {
                     return 100 // default which should never be use, because either columnWidth, or columnsWidths is set
                 }()
                 
+                let currentContentAlignment = { () -> ContentAlignment in
+                    if let a = tableDefinition?.alignments {
+                        if a.count > j {
+                            return a[j]
+                        }
+                    }
+                    
+                    return alignment
+                }()
+                
                 let frame = CGRect(x: newOriginX, y: newOriginY, width: currentColumnWidth, height: rowHeight)
                 drawTextInCell(frame, text: dataArray[i][j] as NSString, alignment: alignment, font: currentFont, textColor: currentTextColor)
             }
