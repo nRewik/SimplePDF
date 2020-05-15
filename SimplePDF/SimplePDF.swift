@@ -303,22 +303,20 @@ open class SimplePDF {
         
         let height = (CGFloat(rowCount)*rowHeight)
         
-        let drawRect = CGRect(x: currentOffset.x, y: currentOffset.y, width: pageBounds.width - pageMarginLeft - pageMarginRight, height: height)
-        
-        UIColor.black.setStroke()
-        UIColor.black.setFill()
-        
         let tableWidth = { () -> CGFloat in
             if let cws = tableDefinition?.columnWidths {
-                return cws.reduce(0, { (result, current) -> CGFloat in
-                    return result + current
-                })
+                return cws.reduce(0, +)
             } else if let cw = columnWidth {
                 return CGFloat(columnCount) * cw
             }
             
             return 0 // default which should never be use, because either columnWidth, or columnsWidths is set
         }()
+        
+        let drawRect = CGRect(x: currentOffset.x, y: currentOffset.y, width: tableWidth, height: height)
+        
+        UIColor.black.setStroke()
+        UIColor.black.setFill()
         
         for i in 0...rowCount {
             let newOrigin = drawRect.origin.y + rowHeight*CGFloat(i)
